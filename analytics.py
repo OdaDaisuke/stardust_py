@@ -47,13 +47,14 @@ class DataAnalyzer:
 
         while dataset_idx < len(dataset):
             score = self.__similarity_score(analyze_type, target_idx, dataset_idx)
+
             if score > 0 and target_idx != dataset_idx:
                 data = { "score": score }
 
                 if analyze_type == AnalyzeType.USER:
-                    data["fav_idx"] = dataset_idx
-                else:
                     data["user_id"] = dataset_idx
+                else:
+                    data["lyric_id"] = dataset[dataset_idx]["lyric_id"]
 
                 similars.append(data)
             dataset_idx += 1

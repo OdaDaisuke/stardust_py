@@ -1,25 +1,32 @@
 # coding: utf-8
 import analytics
-from favs import user_fav_dataset
-from favs import lyric_faved_users_dataset
+import favs
 
 analyzer = analytics.DataAnalyzer()
 
-def get_user_based_label_data():
-    user_table_idx = 0
-    users = []
+def analyze_data(analyze_type):
+    table_idx = 0
+    target_datalist = []
+    similar_keyname = "similar_users"
+    analyze_method = analyzer.get_similar_users
+    dataset = favs.user_fav_dataset
 
-    while user_table_idx < len(user_fav_dataset):
+    if analyze_type == analytics.AnalyzeType.LYRIC:
+        similar_keyname = "similar_lyrics"
+        analyze_method = analyzer.get_similar_lyrics
+        dataset = favs.lyric_faved_users_dataset
+
+    while table_idx < len(dataset):
         ranking_range = 3
-        similar_users = analyzer.get_similar_users(user_table_idx, ranking_range)
-        user_table_idx += 1
+        similars = analyze_method(table_idx, ranking_range)
+        table_idx += 1
 
-        if len(similar_users["similar_users"]) <= 0:
+        if len(similars[similar_keyname]) <= 0:
             continue
 
-        users.append(similar_users)
+        target_datalist.append(similars)
 
-    return users
+    return target_datalist
 
-for v in get_user_based_label_data():
+for v in analyze_data(analytics.AnalyzeType.LYRIC):
     print v

@@ -32,34 +32,21 @@ for row in users:
 
     user_fav_dataset.append(user_favs)
 
-scannedList = []
-for row in favs:
-    scanned = False
-    lyric_id = row[5]
-    fav_id = row[0]
+for idx, val in enumerate(favs):
+    lyric_id = val[5]
+    fav_id = val[0]
     fav_data = {
         "lyric_id": lyric_id,
         "fav_id": fav_id,
         "faved_users": [],
     }
 
-    for v in scannedList:
-        if v == lyric_id:
-            scanned = True
+    for row_fav in favs:
+        if fav_id == row_fav[0]:
+            break
 
-    if scanned == False:
+        if lyric_id == row_fav[5]:
+            fav_data["faved_users"].append(row_fav[4])
+            del favs[idx]
 
-        for row_fav in favs:
-            if fav_id == row_fav[0]:
-                break
-
-            if lyric_id == row_fav[5]:
-                fav_data["faved_users"].append(row_fav[4])
-
-        scannedList.append(lyric_id)
-
-        lyric_faved_users_dataset.append(fav_data)
-
-
-# for v in lyric_faved_users_dataset:
-    # print v
+    lyric_faved_users_dataset.append(fav_data)
